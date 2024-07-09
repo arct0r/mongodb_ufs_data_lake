@@ -15,13 +15,10 @@ client = mongoConnect()
 # Carico il database
 db = client['ufs_data_lake']
 # Carico le 4 collections su streamlit
+st.session_state['db'] = client['ufs_data_lake']
 st.session_state['artists'] = db['artists']
 st.session_state['events'] = db['events']
 st.session_state['locations'] = db['locations']
 st.session_state['tickets'] = db['tickets']
 
-# Test
-print(db.list_collection_names())
-[i for i in db.list_collection_names()]
-'a'
 

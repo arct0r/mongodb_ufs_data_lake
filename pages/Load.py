@@ -6,7 +6,8 @@ st.set_page_config(
 )
 
 artists = st.session_state['artists'].distinct('artist')
-artists
+locations = st.session_state['artists'].distinct('locations')
+
 
 
 def add_event (event_name, artist, location='', price=999, slots=100, date='', description=''):
@@ -54,6 +55,7 @@ with tab2:
             try:
                 st.session_state['artists'].insert_one({'artist': name})
                 st.success(f'Added {name}')
+                st.rerun()
             except: 
                 st.error(f'Could not add {name}')
 
