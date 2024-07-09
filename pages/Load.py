@@ -1,28 +1,34 @@
 import streamlit as st
 import json
+import datetime
+from datetime import date
+from datetime import datetime
+
 st.set_page_config(
     page_title="Homepage",
     page_icon="👋",
 )
 
 artists = st.session_state['artists'].distinct('artist')
-locations = st.session_state['artists'].distinct('locations')
+locations = st.session_state['locations'].distinct('location_name')
+
+with st.expander('Locations, Artists'):
+    artists
+    locations
 
 
-
-def add_event (event_name, artist, location='', price=999, slots=100, date='', description=''):
-        st.session_state['events'].insert_one(
-            {
-                'event_name':event_name,
-                'artist':artist,
-                'location':location,
-                'price':price,
-                'slots':slots,
-                'date':date,
-                'description':description
-            }
-        )
-        st.sucess(f'Added {event_name}')
+def add_event (event_name, artist, location, price, slots, date, description):
+    try:
+        st.session_state['events'].insert_one({'event_name':event_name,
+                                                'artist':artist,
+                                                'location':location,
+                                                'price':price,
+                                                'slots':slots,
+                                                'date':date,
+                                                'description':description})
+        st.success(f'Added {event_name}')
+    except:
+        st.error('Could not add the event')
 
 
 st.title('Add new stuff to the database')
@@ -35,15 +41,18 @@ with tab1:
         with col1:
             event_name = st.text_input("Event name")
             artist = st.multiselect("Artist name", options=artists)
-            location = st.multiselect(label="Location", options=[])
+            location = st.selectbox(label="Location", options=locations)
         with col2:
             price = st.text_input("Price in 🍌")
             slots = st.text_input("Slots")
-            date = st.date_input("Event date")   
+            date = st.date_input("Event date")
+            hour = st.time_input("Ora dell'evento")
         description = st.text_area("Event description")
         confirm_event = st.form_submit_button("Submit")
-        if confirm_event:
-            add_event(event_name, artist, location, price, slots, date, description)
+        if confirm_event and event_name and artist and location and price and slots and date and hour and description:
+            date_combined = datetime.combine(date, hour)
+            add_event(event_name, artist, location, price, slots, date_combined, description)
+            
 
 
 with tab2:
@@ -55,7 +64,6 @@ with tab2:
             try:
                 st.session_state['artists'].insert_one({'artist': name})
                 st.success(f'Added {name}')
-                st.rerun()
             except: 
                 st.error(f'Could not add {name}')
 
@@ -70,6 +78,12 @@ with tab3:
             location_country = st.text_input("Location Country")
             coordinates = st.text_input("Coordinates")
         confirm_location = st.form_submit_button("Submit")
+        if location_name not in ['', ' '] and confirm_location:
+            try:
+                st.session_state['locations'].insert_one({'location_name': location_name})
+                st.success(f'Added {location_name}')
+            except: 
+                st.error(f'Could not add {location_name}')
 
 
 
