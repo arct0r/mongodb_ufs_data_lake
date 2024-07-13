@@ -1,4 +1,4 @@
-import stremlit as st
+import streamlit as st
 from geopy.geocoders import Nominatim
 # Inizializza il geocodificatore
 geolocator = Nominatim(user_agent="geoapiExercises")
