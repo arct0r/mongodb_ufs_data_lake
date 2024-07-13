@@ -11,11 +11,11 @@ st.set_page_config(
 )
 
 artists = st.session_state['artists'].distinct('artist')
-locations = st.session_state['locations'].distinct('location_name')
-
+locations = st.session_state['locations'].distinct('name')
 with st.expander('Locations, Artists'):
-    artists
-    locations
+        artists
+        locations
+
 
 
 def add_event (event_name, artist, location, price, slots, date, description):
@@ -25,6 +25,7 @@ def add_event (event_name, artist, location, price, slots, date, description):
                                                 'location':location,
                                                 'price':price,
                                                 'slots':slots,
+                                                'freeSlots':slots,
                                                 'date':date,
                                                 'description':description})
         st.success(f'Added {event_name}')
@@ -51,8 +52,11 @@ with tab1:
         description = st.text_area("Event description")
         confirm_event = st.form_submit_button("Submit")
         if confirm_event and event_name and artist and location and price and slots and date and hour and description:
-            date_combined = datetime.combine(date, hour)
-            add_event(event_name, artist, location, price, slots, date_combined, description)
+            try:
+                date_combined = datetime.combine(date, hour)
+                add_event(event_name, artist, location, price, slots, date_combined, description)
+            except:
+                st.error("Coudln't add the event")
             
 
 
@@ -80,12 +84,18 @@ with tab3:
             location_name = st.text_input('Nome della location')
         confirm_location = st.form_submit_button("Submit")
         if (location_street and location_city and location_country and location_name) not in ['', ' '] and confirm_location:
-                #st.session_state['locations'].insert_one({'location_name': location_name})
                 location = f"{location_street.strip()}, {location_city.strip()}, {location_country.strip()}"
-                coordinates = get_coordinates(location)
-                coordinates
-                st.success(f'Added {location}')
-
+                try:
+                    #st.session_state['locations'].insert_one({'location_name': location_name})
+                    coordinates = get_coordinates(location)
+                    st.session_state['locations'].insert_one({'coordinates': coordinates, 
+                                                              'street':location_street, 
+                                                              'country':location_country, 
+                                                              'city':location_city,
+                                                              'name':location_name})
+                    st.success(f'Added {location}')
+                except:
+                    st.error(f"Coudln't add {location}")
 
 
 
