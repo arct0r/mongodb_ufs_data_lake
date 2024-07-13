@@ -3,6 +3,7 @@ import json
 import datetime
 from datetime import date
 from datetime import datetime
+from functions import get_coordinates  
 
 st.set_page_config(
     page_title="Homepage",
@@ -72,18 +73,19 @@ with tab3:
     with st.form("Add Location"):
         col1,col2 = st.columns(2)
         with col1:
-            location_name = st.text_input("Location Name")
+            location_street = st.text_input("Location Street")
             location_city = st.text_input("Location City")
         with col2:
             location_country = st.text_input("Location Country")
-            coordinates = st.text_input("Coordinates")
+            location_name = st.text_input('Nome della location')
         confirm_location = st.form_submit_button("Submit")
-        if location_name not in ['', ' '] and confirm_location:
-            try:
-                st.session_state['locations'].insert_one({'location_name': location_name})
-                st.success(f'Added {location_name}')
-            except: 
-                st.error(f'Could not add {location_name}')
+        if (location_street and location_city and location_country and location_name) not in ['', ' '] and confirm_location:
+                #st.session_state['locations'].insert_one({'location_name': location_name})
+                location = f"{location_street.strip()}, {location_city.strip()}, {location_country.strip()}"
+                coordinates = get_coordinates(location)
+                coordinates
+                st.success(f'Added {location}')
+
 
 
 
