@@ -31,7 +31,7 @@ if checkout and len(st.session_state['cart'])!=0:
     with st.spinner("Buying..."):
                 for event in st.session_state['cart']:
                     SN = load_ticket(event)
-                    st.success(f'Ecco il tuo ticket per {event['evento']}: | ***{SN}*** |' )
+                    st.success(f"Ecco il tuo ticket per {event['evento']}: | ***{SN}*** |" )
                     st.session_state['cart'] = []
 
 with st.expander('Biglietti emessi'):
