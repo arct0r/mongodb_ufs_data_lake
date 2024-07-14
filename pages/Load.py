@@ -4,6 +4,7 @@ import datetime
 from datetime import date
 from datetime import datetime
 from functions import get_coordinates  
+from annotated_text import annotated_text, annotation
 
 st.set_page_config(
     page_title="Homepage",
@@ -11,20 +12,33 @@ st.set_page_config(
 )
 st.session_state['cart'] = []
 
+
+
+tags_opt = [
+    'Cibo',
+    'Concerto',
+    'Sport',
+    'Cinema',
+    '18+',
+    'Letteratura',
+    'Natura',
+    'Arte'
+]
+
 artists = st.session_state['artists'].distinct('artist')
 locations = st.session_state['locations'].distinct('name')
 full_locations = [location for location in st.session_state['locations'].find({})]
 full_locations_processed = {}
 for loc in full_locations:
     full_locations_processed[loc['name']] = loc
-full_locations_processed
+
 with st.expander('Locations, Artists'):
         artists
-        full_locations
+        full_locations_processed
 
 
 #full_locations_processed['Kebab Anatolia ']['location']
-def add_event (event_name, artist, location, price, slots, date, description):
+def add_event (event_name, artist, location, price, slots, date, description, tags):
     try:
         st.session_state['events'].insert_one({'event_name':event_name,
                                                 'artist':artist,
@@ -37,7 +51,8 @@ def add_event (event_name, artist, location, price, slots, date, description):
                                                 'slots':slots,
                                                 'freeSlots':slots,
                                                 'date':date,
-                                                'description':description})
+                                                'description':description,
+                                                'tags':tags})
         st.success(f'Added {event_name}')
     except:
         st.error('Could not add the event')
@@ -54,6 +69,7 @@ with tab1:
             event_name = st.text_input("Event name")
             artist = st.multiselect("Artist name", options=artists)
             location = st.selectbox(label="Location", options=locations)
+            tags = st.multiselect(label='Tags', options=tags_opt)
         with col2:
             price = st.text_input("Price in 🍌")
             slots = st.text_input("Slots")
@@ -61,10 +77,10 @@ with tab1:
             hour = st.time_input("Ora dell'evento")
         description = st.text_area("Event description")
         confirm_event = st.form_submit_button("Submit")
-        if confirm_event and event_name and artist and location and price and slots and date and hour and description:
+        if confirm_event and event_name and artist and location and price and slots and date and hour and description and tags:
             try:
                 date_combined = datetime.combine(date, hour)
-                add_event(event_name, artist, location, price, slots, date_combined, description)
+                add_event(event_name, artist, location, price, slots, date_combined, description, tags)
             except:
                 st.error("Coudln't add the event")
             

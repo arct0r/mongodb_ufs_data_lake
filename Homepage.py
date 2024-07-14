@@ -9,10 +9,11 @@ from geopy.exc import GeocoderTimedOut, GeocoderUnavailable, GeocoderInsufficien
 import time
 import random
 import uuid
+from pages.Load import tags_opt
 
 st.set_page_config(
     page_title="Homepage",
-    page_icon="👋",
+    page_icon="🐥",
     layout='wide'
 )
 
@@ -47,10 +48,6 @@ events = [event for event in events]
 luoghi = [luogo for luogo in luoghi]
 
 
-
-with st.expander('Event json'):
-    events
-
 filters = {}
 
 with st.expander('Search Filters'):
@@ -64,9 +61,12 @@ with st.expander('Search Filters'):
         data_end = st.date_input("A", value=None)
     with col3:
         luogo_filtro = st.text_input("Luogo")
-        distanza_filtro = st.slider(label='Distanza dal luogo in km', min_value = 1, max_value = 7, step=1, value=None)
-    add = st.button('Conferma')
-    reset = st.button('Resetta i filtri')
+        distanza_filtro = st.text_input(label='Distanza dal luogo in km', value=None)
+    with col1: 
+        add = st.button('Conferma')
+        reset = st.button('Resetta i filtri')
+    with col3:
+        tags = st.selectbox(label='Tags', options=tags_opt)
 
     if add:
         if artista_filtro:
@@ -76,11 +76,17 @@ with st.expander('Search Filters'):
         if data_start and data_end:
             filters['date'] = {'start' : data_start, 'end' : data_end}
         if luogo_filtro and distanza_filtro:
-            coordinates = get_coordinates(luogo_filtro)
-            if coordinates != 'Non ho trovato il luogo':
-                filters['luogo_filtro'] = luogo_filtro
-                filters['coordinate'] = (coordinates[1], coordinates[0])  # [longitude, latitude]
-                filters['distanza'] = distanza_filtro
+            try:
+                distanza_filtro_km = int(distanza_filtro.strip())
+                coordinates = get_coordinates(luogo_filtro)
+                if coordinates != 'Non ho trovato il luogo':
+                    filters['coordinate'] = (coordinates[1], coordinates[0])  # [longitude, latitude]
+                    filters['distanza'] = distanza_filtro_km
+            except:
+                st.error('Distanza non valida') 
+        if tags:
+            filters['tags'] = tags
+
         filtered_events = filter_events(db['events'], filters)
         events = [event for event in filtered_events]
 
@@ -99,8 +105,8 @@ columns = [c1,c2]
 def print_event(event:dict):
             
             st.subheader(f':violet[**{event['event_name']}**]')
+            f'📅 :blue[*Data:*] {event['date'].strftime("**%d/%m**, %H:%M")}, :orange[***| {', '.join(event['tags'])}***]'
             f'👨‍🎨 :blue[*Artisti:*] {', '.join(event['artist'])}'
-            f'📅 :blue[*Data:*] {event['date'].strftime("**%d/%m**, %H:%M")}'
             f'🗺️ :blue[*Location:*] {event['location']}, {event['location_city']}'
             f'🎟️ :blue[*Posti disponibili:*] {event['freeSlots']}'
             f'🤑 :blue[*Prezzo:*] {event['price']} 🍌'

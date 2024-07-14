@@ -73,6 +73,8 @@ def filter_query(filters):
                 # Questo serve per convertire i km in metri
             }
         }
+    if 'tags' in filters:
+        query['tags'] = filters['tags']
     print("Query finale:", query)
     return query
 
@@ -80,3 +82,10 @@ def filter_events(collection, filters):
     query = filter_query(filters)
     events = list(collection.find(query))
     return events
+
+def check_for_availabily(event):
+    pass
+def remove_slot_from_event(event):
+    pass
+def load_ticket(event):
+    pass
