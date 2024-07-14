@@ -10,6 +10,7 @@ import time
 import random
 import uuid
 from pages.Load import tags_opt
+from functions import filter_query
 
 st.set_page_config(
     page_title="Homepage",
@@ -66,7 +67,7 @@ with st.expander('Search Filters'):
         add = st.button('Conferma')
         reset = st.button('Resetta i filtri')
     with col3:
-        tags = st.selectbox(label='Tags', options=tags_opt)
+        tags = st.selectbox(label='Tags', options=tags_opt, index=None)
 
     if add:
         if artista_filtro:
@@ -86,13 +87,19 @@ with st.expander('Search Filters'):
                 st.error('Distanza non valida') 
         if tags:
             filters['tags'] = tags
+        query = str(filter_query(filters))
 
         filtered_events = filter_events(db['events'], filters)
         events = [event for event in filtered_events]
+        st.code('db.events.find('+query+')')
+
 
 
     # Mostro i filtri
-    filters
+    with col2:
+        filters
+
+
 
 
 
