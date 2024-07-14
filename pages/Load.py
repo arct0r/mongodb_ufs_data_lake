@@ -13,17 +13,23 @@ st.session_state['cart'] = []
 
 artists = st.session_state['artists'].distinct('artist')
 locations = st.session_state['locations'].distinct('name')
+full_locations = [location for location in st.session_state['locations'].find({})]
+full_locations_processed = {}
+for loc in full_locations:
+    full_locations_processed[loc['name']] = loc
+full_locations_processed
 with st.expander('Locations, Artists'):
         artists
-        locations
+        full_locations
 
 
-
+#full_locations_processed['Kebab Anatolia ']['location']
 def add_event (event_name, artist, location, price, slots, date, description):
     try:
         st.session_state['events'].insert_one({'event_name':event_name,
                                                 'artist':artist,
                                                 'location':location,
+                                                'location_coordinates':full_locations_processed[location]['location'],
                                                 'price':price,
                                                 'slots':slots,
                                                 'freeSlots':slots,
@@ -87,13 +93,19 @@ with tab3:
         if (location_street and location_city and location_country and location_name) not in ['', ' '] and confirm_location:
                 location = f"{location_street.strip()}, {location_city.strip()}, {location_country.strip()}"
                 try:
-                    #st.session_state['locations'].insert_one({'location_name': location_name})
                     coordinates = get_coordinates(location)
-                    st.session_state['locations'].insert_one({'coordinates': coordinates, 
-                                                              'street':location_street, 
-                                                              'country':location_country, 
-                                                              'city':location_city,
-                                                              'name':location_name})
+                    st.session_state['locations'].insert_one({
+                        'location': {
+                            'type': 'Point',
+                            'coordinates': [coordinates[1], coordinates[0]]  # [longitude, latitude] 
+                            # Devo invertirli perchè il GeoJSON format li vuole invertiti
+                            # GeoJSON https://geojson.org/
+                        },
+                        'street': location_street,
+                        'country': location_country,
+                        'city': location_city,
+                        'name': location_name
+                    })
                     st.success(f'Added {location}')
                 except:
                     st.error(f"Coudln't add {location}")

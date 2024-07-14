@@ -5,6 +5,9 @@ import time
 import random
 import uuid
 
+import datetime
+from bson import ObjectId
+
 def mongoConnect ():
     connection_url = "mongodb+srv://scimmiotto:ciao123@cluster0.tjaswsm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     client = MongoClient(connection_url)  
@@ -28,3 +31,41 @@ def get_coordinates(address):
     except (GeocoderTimedOut, GeocoderUnavailable, GeocoderInsufficientPrivileges) as e:
         return f"Error: {str(e)}"
     # Per gestire le eccezioni
+
+
+
+def filter_query(filters):
+    query = {}
+    print("Filtri in entrata:", filters)
+    if 'artisti' in filters:
+        query['artist'] = filters['artisti']
+    if 'nome_evento' in filters:
+        query['event_name'] = {'$regex': filters['nome_evento'], '$options': 'i'}
+    if 'date' in filters:
+        start_date = datetime.datetime.combine(filters['date']['start'], datetime.time.min)
+        end_date = datetime.datetime.combine(filters['date']['end'], datetime.time.max)
+        query['date'] = {
+            '$gte': start_date,
+            '$lte': end_date
+        }
+    if 'luogo_filtro' in filters:
+        query['location'] = {'$regex': filters['luogo_filtro'], '$options': 'i'}
+    if 'coordinate' in filters and 'distanza' in filters:
+        lon, lat = filters['coordinate']
+        query['location_coordinates'] = {
+            '$nearSphere': {
+                '$geometry': {
+                    'type': 'Point',
+                    'coordinates': [lon, lat]
+                },
+                '$maxDistance': filters['distanza'] * 1000
+                # Questo serve per convertire i km in metri
+            }
+        }
+    print("Query finale:", query)
+    return query
+
+def filter_events(collection, filters):
+    query = filter_query(filters)
+    events = list(collection.find(query))
+    return events
