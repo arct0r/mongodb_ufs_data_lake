@@ -99,11 +99,11 @@ columns = [c1,c2]
 def print_event(event:dict):
             
             st.subheader(f':violet[**{event['event_name']}**]')
-            f':blue[*Artisti:*] {', '.join(event['artist'])}'
-            f':blue[*Data:*] {event['date'].strftime("**%d/%m**, %H:%M")}'
-            f':blue[*Location:*] {event['location']}, {event['location_city']}'
-            f':blue[*Posti disponibili:*] {event['freeSlots']}'
-            f':blue[*Prezzo:*] {event['price']} 🍌'
+            f'👨‍🎨 :blue[*Artisti:*] {', '.join(event['artist'])}'
+            f'📅 :blue[*Data:*] {event['date'].strftime("**%d/%m**, %H:%M")}'
+            f'🗺️ :blue[*Location:*] {event['location']}, {event['location_city']}'
+            f'🎟️ :blue[*Posti disponibili:*] {event['freeSlots']}'
+            f'🤑 :blue[*Prezzo:*] {event['price']} 🍌'
             f'{event['description']}'
             confirm_event = st.form_submit_button("Add to cart")
             if confirm_event:
