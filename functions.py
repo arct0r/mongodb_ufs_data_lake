@@ -62,6 +62,7 @@ def filter_query(filters):
         }
     if 'luogo_filtro' in filters:
         query['location'] = {'$regex': filters['luogo_filtro'], '$options': 'i'}
+        # $options : i era "Case insensitivity to match upper and lower cases. "
     if 'coordinate' in filters and 'distanza' in filters:
         lon, lat = filters['coordinate']
         query['location_coordinates'] = {

@@ -11,9 +11,9 @@ st.title('Cart')
 
 'In this page you will be able to buy selected events.'
 for event in st.session_state['cart']:
-    st.code(f'''{event['evento']}, {event['artist'][0]}, {event['price']} 🍌, ID: {event['_id']}''')
+    st.code(f'''{event['evento']}, {event['artist'][0]}, {event['price']} $''')
 
-st.subheader(f"Totale: {sum(int(event['price']) for event in st.session_state['cart'])} 🍌")
+st.subheader(f"Totale: {sum(int(event['price']) for event in st.session_state['cart'])} $")
 
 col1,col2, col3 = st.columns([2,2,6])
 
@@ -33,6 +33,7 @@ if checkout and len(st.session_state['cart'])!=0:
                     SN = load_ticket(event)
                     st.success(f"Ecco il tuo ticket per {event['evento']}: | ***{SN}*** |" )
                     st.session_state['cart'] = []
+                    st.balloons()
 
 with st.expander('Biglietti emessi'):
      tickets = st.session_state['tickets'].find({})
