@@ -1,9 +1,10 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable, GeocoderInsufficientPrivileges
 import time
 import random
 import uuid
+import streamlit as st
 
 import datetime
 from bson import ObjectId
@@ -83,9 +84,48 @@ def filter_events(collection, filters):
     events = list(collection.find(query))
     return events
 
-def check_for_availabily(event):
-    pass
-def remove_slot_from_event(event):
-    pass
+
 def load_ticket(event):
-    pass
+    events_collection = st.session_state['events']
+    tickets_collection = st.session_state['tickets']
+
+    # Cerco di ridurre 'freeSlots' nella collection degli eventi
+    updated_event = events_collection.find_one_and_update(
+        {
+            '_id': event['_id'],
+            'freeSlots': {'$gt': 0}  #$gt è 'greater than'. Si assicura che ci siano piu' di 0 tickets disponibili.
+        },
+        {'$inc': {'freeSlots': -1}},
+        return_document=ReturnDocument.AFTER
+    )
+
+    if updated_event:
+        print(f"Sono riuscito a ridurre gli slots per {event['evento']}: {updated_event['freeSlots']} posti rimasti")
+        
+        # Genero un uuid per il ticket
+        ticket_id = str(uuid.uuid4())
+
+        # Creo un nuovo dizionario per il ticket
+        new_ticket = {
+            'ticket_id': ticket_id,
+            'event_name': event['evento']
+        }
+
+        result = tickets_collection.update_one(
+            {'event_id': event['_id']},
+            {'$push': {'tickets': new_ticket}},
+            upsert=True
+        ) # Questo mi 'spinge' il ticket dentro alla collections dei tickets.
+        # Se è la prima volta che viene emesso un ticket per un determinato evento allora viene creato un nuovo oggetto per quel evento dentro la collection di tickets.
+
+        if result.modified_count > 0 or result.upserted_id:
+            print(f"Ticket {ticket_id} added to event {event['_id']}")
+            return ticket_id
+        else:
+            print("Non sono riuscito ad aggiungere il ticket alla collections dei tickets")
+            return None
+    else:
+        print("Non ci sono piu' biglietti disponibili!")
+        return None
+
+    

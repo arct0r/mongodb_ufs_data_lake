@@ -1,6 +1,6 @@
 import streamlit as st
 from functions import mongoConnect
-from pymongo import MongoClient, GEOSPHERE
+from pymongo import MongoClient, GEOSPHERE, ASCENDING
 from functions import get_coordinates, reverseCoord
 import datetime
 from functions import filter_events
@@ -32,18 +32,22 @@ st.session_state['db'] = client['ufs_data_lake']
 st.session_state['artists'] = db['artists']
 st.session_state['events'] = db['events']
 st.session_state['locations'] = db['locations']
+st.session_state['tickets'] = db['tickets']
+
 db['locations'].create_index([("location", "2dsphere")])
 db['events'].create_index([("location_coordinates", "2dsphere")])
 st.session_state['tickets'] = db['tickets']
 
+current_datetime = datetime.datetime.now()
+
 artisti = db['artists'].find({})
 if past_events:
-    events = db['events'].find({})
+    events = db['events'].find({}).sort('date', ASCENDING)
 elif not past_events:
     current_datetime = datetime.datetime.now()
     events = db['events'].find({
     'date': {'$gte': current_datetime}
-    })
+    }).sort('date', ASCENDING)
 luoghi = db['locations'].find({})
 events = [event for event in events]
 luoghi = [luogo for luogo in luoghi]
@@ -121,10 +125,13 @@ def print_event(event:dict):
             confirm_event = st.form_submit_button("Add to cart")
             if confirm_event:
                 if int(event['freeSlots']) != 0:
-                    try:
-                        st.session_state['cart'].append({'evento':event['event_name'], 'price':event['price']})
-                    except: 
-                        st.session_state['cart'] = [{'evento':event['event_name'], 'price':event['price']}]
+                    if int(event['freeSlots'])>0 and event['date'] > current_datetime:
+                        try:
+                            st.session_state['cart'].append({'evento':event['event_name'], 'price':event['price'], 'artist':event['artist'], '_id':event['_id']})
+                        except: 
+                            st.session_state['cart'] = []
+                    else:
+                        st.error("Il concerto non è piu' disponibile")
 
 
 
