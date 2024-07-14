@@ -7,5 +7,5 @@ st.set_page_config(
 st.title('Cart')
 
 'In this page you will be able to buy selected events.'
-st.session_state['cart'] = []
+
 st.session_state['cart']

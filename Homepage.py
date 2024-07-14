@@ -1,6 +1,7 @@
 import streamlit as st
 from functions import mongoConnect
 import pymongo
+from functions import get_coordinates
 
 st.set_page_config(
     page_title="Homepage",
@@ -40,24 +41,36 @@ filters = {}
 with st.expander('Search Filters'):
     col1,col2,col3= st.columns(3)
     with col1:
-        artista_filtro = st.selectbox("Nome artista", options=[a['artist'] for a in artisti])
+        artista_filtro = st.selectbox("Nome artista", options=[a['artist'] for a in artisti], index = None)
         nome_evento_filtro = st.text_input("Nome evento")         
     with col2:
         data_start = st.date_input("Da")
-        data_end = st.date_input("A")
+        data_end = st.date_input("A", value=None)
     with col3:
         luogo_filtro = st.text_input("Luogo")
-        distanza_filtro = st.slider(label='Distanza dal luogo in km', min_value = 1, max_value = 7, step=1)
+        distanza_filtro = st.slider(label='Distanza dal luogo in km', min_value = 1, max_value = 7, step=1, value=None)
     add = st.button('Conferma')
     if add:
         if artista_filtro:
             filters['artisti'] = artista_filtro
+        if nome_evento_filtro:
+            filters['nome_evento'] = nome_evento_filtro
+        if data_start and data_end:
+            filters['date'] = {'start' : data_start, 'end' : data_end}
+        if luogo_filtro and distanza_filtro:
+            coordinates = get_coordinates(luogo_filtro)
+            if coordinates != 'Non ho trovato il luogo':
+                filters['luogo_filtro'] = luogo_filtro
+                filters['coordinate'] =  coordinates
+                filters['distanza'] = distanza_filtro
     reset = st.button('Resetta i filtri')
     if reset:
         filters.clear()
+    'Filtri attivi: '
+    filters
 
 
-filters
+
 
 
 
@@ -81,6 +94,7 @@ for i in range(0,len(events),2):
     with c1:
         with st.form(f'{i}'):
             print_event(events[i])
+
     with c2:
         try:
             with st.form(f'{i+1}'):

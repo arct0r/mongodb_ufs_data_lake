@@ -9,6 +9,7 @@ st.set_page_config(
     page_title="Homepage",
     page_icon="👋",
 )
+st.session_state['cart'] = []
 
 artists = st.session_state['artists'].distinct('artist')
 locations = st.session_state['locations'].distinct('name')
