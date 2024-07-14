@@ -108,11 +108,10 @@ def load_ticket(event):
         # Creo un nuovo dizionario per il ticket
         new_ticket = {
             'ticket_id': ticket_id,
-            'event_name': event['evento']
         }
 
         result = tickets_collection.update_one(
-            {'event_id': event['_id']},
+            {'event_id': event['_id'], 'event_name':event['evento']},
             {'$push': {'tickets': new_ticket}},
             upsert=True
         ) # Questo mi 'spinge' il ticket dentro alla collections dei tickets.
