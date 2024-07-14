@@ -13,7 +13,7 @@ st.title('Cart')
 for event in st.session_state['cart']:
     st.code(f'''{event['evento']}, {event['artist'][0]}, {event['price']} 🍌, ID: {event['_id']}''')
 
-st.subheader(f'Totale: {sum(int(event["price"]) for event in st.session_state['cart'])} 🍌')
+st.subheader(f"Totale: {sum(int(event['price']) for event in st.session_state['cart'])} 🍌")
 
 col1,col2, col3 = st.columns([2,2,6])
 
