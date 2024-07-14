@@ -4,7 +4,6 @@ import datetime
 from datetime import date
 from datetime import datetime
 from functions import get_coordinates  
-from annotated_text import annotated_text, annotation
 
 st.set_page_config(
     page_title="Homepage",
