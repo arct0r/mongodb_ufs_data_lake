@@ -32,6 +32,17 @@ def get_coordinates(address):
         return f"Error: {str(e)}"
     # Per gestire le eccezioni
 
+def reverseCoord(latitude, longitude):
+    user_agent = f"MongoConcertApp/{uuid.uuid4()}"
+    # Oggetto Nomatim per ottenere le coordinate
+    geolocator = Nominatim(user_agent=user_agent)
+
+    # Perform reverse geocoding
+    location = geolocator.reverse((latitude, longitude))
+
+    # Print the address
+    print(location.address)
+
 
 
 def filter_query(filters):

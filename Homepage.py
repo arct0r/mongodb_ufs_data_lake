@@ -1,7 +1,7 @@
 import streamlit as st
 from functions import mongoConnect
 from pymongo import MongoClient, GEOSPHERE
-from functions import get_coordinates
+from functions import get_coordinates, reverseCoord
 import datetime
 from functions import filter_events
 from geopy.geocoders import Nominatim
@@ -98,10 +98,10 @@ columns = [c1,c2]
 
 def print_event(event:dict):
             
-            f':blue[*Evento:*] {event['event_name']}'
+            st.subheader(f':violet[**{event['event_name']}**]')
             f':blue[*Artisti:*] {', '.join(event['artist'])}'
             f':blue[*Data:*] {event['date'].strftime("**%d/%m**, %H:%M")}'
-            f':blue[*Location:*] {event['location']}'
+            f':blue[*Location:*] {event['location']}, {event['location_city']}'
             f':blue[*Posti disponibili:*] {event['freeSlots']}'
             f':blue[*Prezzo:*] {event['price']} 🍌'
             f'{event['description']}'
