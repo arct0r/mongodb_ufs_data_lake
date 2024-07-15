@@ -3,15 +3,23 @@ import json
 import datetime
 from datetime import date
 from datetime import datetime
-from functions import get_coordinates  
+from functions import get_coordinates, mongoConnect
 
 st.set_page_config(
-    page_title="Homepage",
-    page_icon="👋",
+    page_title="Load",
 )
-st.session_state['cart'] = []
 
-
+if ('db' or 'artists' or 'events' or 'locations' or 'tickets') not in st.session_state:
+    # Mi collego al client
+    client = mongoConnect()
+    # Carico il database
+    db = client['ufs_data_lake']
+    # Inizializzo le 4 collections e le carico su streamlit
+    st.session_state['db'] = client['ufs_data_lake']
+    st.session_state['artists'] = db['artists']
+    st.session_state['events'] = db['events']
+    st.session_state['locations'] = db['locations']
+    st.session_state['tickets'] = db['tickets']
 
 tags_opt = [
     'Cibo',
@@ -24,6 +32,7 @@ tags_opt = [
     'Arte'
 ]
 
+st.session_state['artists'] = st.session_state['db']['artists']
 artists = st.session_state['artists'].distinct('artist')
 locations = st.session_state['locations'].distinct('name')
 full_locations = [location for location in st.session_state['locations'].find({})]

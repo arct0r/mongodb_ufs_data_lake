@@ -27,36 +27,44 @@ past_events = st.toggle('Show Past Events')
 client = mongoConnect()
 # Carico il database
 db = client['ufs_data_lake']
-# Carico le 4 collections su streamlit
+# Inizializzo le 4 collections e le carico su streamlit
 st.session_state['db'] = client['ufs_data_lake']
 st.session_state['artists'] = db['artists']
 st.session_state['events'] = db['events']
 st.session_state['locations'] = db['locations']
 st.session_state['tickets'] = db['tickets']
-
-db['locations'].create_index([("location", "2dsphere")])
-db['events'].create_index([("location_coordinates", "2dsphere")])
 st.session_state['tickets'] = db['tickets']
 
+# Questi index mi servono per usare le geoqueries
+db['locations'].create_index([("location", "2dsphere")])
+db['events'].create_index([("location_coordinates", "2dsphere")])
+
+# La current date mi serve per qualcosa dopo
 current_datetime = datetime.datetime.now()
 
+# Mi serve la lista degli artisti per poterla usare nei filtri 
 artisti = db['artists'].find({})
+
+# Carico gli eventi da mostrare nella homepage in base al toggle past_events
 if past_events:
     events = db['events'].find({}).sort('date', ASCENDING)
 elif not past_events:
     current_datetime = datetime.datetime.now()
     events = db['events'].find({
-    'date': {'$gte': current_datetime}
-    }).sort('date', ASCENDING)
-luoghi = db['locations'].find({})
+    'date': {'$gte': current_datetime} # gte current datetime = da oggi in poi. Non mostro la roba vecchia
+    }).sort('date', ASCENDING) # Il sort è per ordinare dal piu' recente 
+
+# luoghi = db['locations'].find({})
+# luoghi = [luogo for luogo in luoghi]
 events = [event for event in events]
-luoghi = [luogo for luogo in luoghi]
 
 
 filters = {}
+# Inizializzo il dizionario per i filtri
 
 with st.expander('Search Filters'):
     filtered_events = {}
+    # E quello per gli eventi filtrati
     col1,col2,col3= st.columns(3)
     with col1:
         artista_filtro = st.selectbox("Nome artista", options=[a['artist'] for a in artisti], index = None)
@@ -92,12 +100,11 @@ with st.expander('Search Filters'):
         if tags:
             filters['tags'] = tags
         query = str(filter_query(filters))
+        # Per mostrare la query che sto eseguendo
 
         filtered_events = filter_events(db['events'], filters)
         events = [event for event in filtered_events]
         st.code('db.events.find('+query+')')
-
-
 
     # Mostro i filtri
     with col2:

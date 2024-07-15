@@ -1,6 +1,6 @@
 import streamlit as st
 import time 
-from functions import load_ticket
+from functions import load_ticket, mongoConnect
 
 st.set_page_config(
     page_title="Cart",
@@ -8,6 +8,19 @@ st.set_page_config(
 )
 
 st.title('Cart')
+# Bugfixing
+if ('db' or 'artists' or 'events' or 'locations' or 'tickets') not in st.session_state:
+    # Mi collego al client
+    client = mongoConnect()
+    # Carico il database
+    db = client['ufs_data_lake']
+    # Inizializzo le 4 collections e le carico su streamlit
+    st.session_state['db'] = client['ufs_data_lake']
+    st.session_state['artists'] = db['artists']
+    st.session_state['events'] = db['events']
+    st.session_state['locations'] = db['locations']
+    st.session_state['tickets'] = db['tickets']
+
 
 'In this page you will be able to buy selected events.'
 for event in st.session_state['cart']:
