@@ -1,32 +1,51 @@
-# UFS Data Lake: Progetto di MongoDB
-Progetto di Data Lake per MongoDB
+# UFS Data Lake: Progetto MongoDB
 
-per eseguire l'interfaccia installate i requirements ed eseguite:
-```
-streamlit run Homepage.py
-```
-In alternativa il progetto è fluibile su questo sito: https://mongolake.streamlit.app/
+Questo progetto implementa un Data Lake utilizzando MongoDB, con un'interfaccia utente creata tramite Streamlit.
 
-## Pagine e funzioni
+## Installazione e Avvio
+
+Per eseguire l'interfaccia localmente:
+
+1. Installare le dipendenze:
+   ```
+   pip install -r requirements.txt
+   ```
+
+2. Avviare l'applicazione:
+   ```
+   streamlit run Homepage.py
+   ```
+
+In alternativa, è possibile accedere al progetto online all'indirizzo: https://mongolake.streamlit.app/
+
+## Struttura e Funzionalità
 
 ### Homepage
-- è possibile visualizzare tutti i concerti in ordine ascendente
-    - Di base vengono visualizzati solo quelli futuri. Attraverso un pulsante in alto è possibile visualizzare anche quelli passati
-- Dalla scheda "filters" è possibile caricare tutta una serie di filtri per le ricerche
-- è possibile filtrare per:
-    - Nome evento
-    - Artista
-    - Tags
-    - Intervallo di Date
-    - Luogo (che viene convertito in coordinate)
-    - Distanza da un luogo
-- I filtri vengono processati e caricati in una query "find" che è possibile visualizzare in tempo reale
-- è possibile aggiungere al carrello ogni evento che abbia posti disponibili e non sia passato
+
+- Visualizzazione dei concerti in ordine cronologico ascendente
+  - Di default vengono mostrati solo gli eventi futuri
+  - Un pulsante permette di includere anche gli eventi passati
+- Funzionalità di ricerca avanzata tramite la scheda "Filters"
+- Filtri disponibili:
+  - Nome evento
+  - Artista
+  - Tags
+  - Intervallo di date
+  - Luogo (convertito in coordinate)
+  - Distanza da un punto specifico
+- Visualizzazione in tempo reale della query MongoDB generata
+- Possibilità di aggiungere al carrello eventi con posti disponibili e date future
 
 ### Cart
-- è possibile acquistare i biglietti aggiungere al carrello. Ogni biglietto genera un codice univoco uuid.
-- Una volta acquistati i biglietti emessi vengono salvati in una collection specifica
+
+- Gestione dell'acquisto dei biglietti
+- Generazione di codici univoci UUID per ogni biglietto
+- Salvataggio dei biglietti emessi in una collection dedicata
 
 ### Load
-- Schermata per aggiungere eventi, artisti e locations al database.
-- Per poter aggiungere un evento bisogna prima aggiungere un artista e una location
+
+- Interfaccia per l'aggiunta di nuovi dati al database:
+  - Eventi
+  - Artisti
+  - Locations
+- Nota: Per aggiungere un evento, è necessario prima creare l'artista e la location corrispondenti
