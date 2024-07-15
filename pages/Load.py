@@ -9,6 +9,7 @@ st.set_page_config(
     page_title="Load",
 )
 
+# Bugfixing
 if ('db' or 'artists' or 'events' or 'locations' or 'tickets') not in st.session_state:
     # Mi collego al client
     client = mongoConnect()
@@ -30,6 +31,12 @@ tags_opt = [
     'Letteratura',
     'Natura',
     'Arte'
+    'Musica',
+    'Spettacolo',
+    'Classica',
+    'Opera',
+    'Jazz',
+    'Rock'
 ]
 
 st.session_state['artists'] = st.session_state['db']['artists']
