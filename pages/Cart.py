@@ -36,16 +36,17 @@ with col1:
     clear_cart = st.button('Clear Cart')
 with col2:
     checkout = st.button('Checkout')
+nominativo = st.text_input('Inserisci un nominativo per i biglietti')
 
 if clear_cart:
     st.session_state['cart'] = []
 
 
-if checkout and len(st.session_state['cart'])!=0:
+if checkout and len(st.session_state['cart'])!=0 and nominativo.strip():
 
     with st.spinner("Buying..."):
                 for event in st.session_state['cart']:
-                    SN = load_ticket(event)
+                    SN = load_ticket(event, nominativo)
                     st.success(f"Ecco il tuo ticket per {event['evento']}: | ***{SN}*** |" )
                     st.session_state['cart'] = []
                     st.balloons()

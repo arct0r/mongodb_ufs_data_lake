@@ -89,7 +89,7 @@ def filter_events(collection, filters):
     return events
 
 
-def load_ticket(event):
+def load_ticket(event, nominativo):
     events_collection = st.session_state['events']
     tickets_collection = st.session_state['tickets']
 
@@ -112,6 +112,7 @@ def load_ticket(event):
         # Creo un nuovo dizionario per il ticket
         new_ticket = {
             'ticket_id': ticket_id,
+            'nominativo': nominativo
         }
 
         result = tickets_collection.update_one(
