@@ -1,11 +1,12 @@
 import streamlit as st
 import time 
-from functions import load_ticket, mongoConnect
+from functions import load_ticket, mongoConnect 
 
 st.set_page_config(
     page_title="Cart",
     page_icon="👋",
 )
+
 
 st.title('Cart')
 # Bugfixing
@@ -20,7 +21,8 @@ if ('db' or 'artists' or 'events' or 'locations' or 'tickets') not in st.session
     st.session_state['events'] = db['events']
     st.session_state['locations'] = db['locations']
     st.session_state['tickets'] = db['tickets']
-
+if not 'cart' in st.session_state:
+    st.session_state['cart'] = []
 
 'In this page you will be able to buy selected events.'
 for event in st.session_state['cart']:

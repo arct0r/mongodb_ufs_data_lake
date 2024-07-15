@@ -10,7 +10,7 @@ import datetime
 from bson import ObjectId
 
 def mongoConnect ():
-    connection_url = "mongodb+srv://scimmiotto:ciao123@cluster0.tjaswsm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    connection_url = st.secrets["DB_URL"]
     client = MongoClient(connection_url)  
     return client
 
