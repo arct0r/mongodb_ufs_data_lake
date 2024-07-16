@@ -45,7 +45,10 @@ current_datetime = datetime.datetime.now()
 # Mi serve la lista degli artisti per poterla usare nei filtri 
 artisti = db['artists'].find({})
 if 'artisti_pictures' not in st.session_state:
-    st.session_state.artisti_pictures = {a['artist']:get_and_resize_artist_image(a['artist']) for a in artisti}
+    try:
+        st.session_state.artisti_pictures = {a['artist']:get_and_resize_artist_image(a['artist']) for a in artisti}
+    except:
+        print("Non sono riuscito a caricare le immagini degli artisti")
 
 # Carico gli eventi da mostrare nella homepage in base al toggle past_events
 if past_events:
