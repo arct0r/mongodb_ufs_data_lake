@@ -53,5 +53,43 @@ if checkout and len(st.session_state['cart'])!=0 and nominativo.strip():
 
 with st.expander('Biglietti emessi'):
      tickets = st.session_state['tickets'].find({})
+     'Comando per ottenere tutti i ticket:'
+     st.code("st.session_state['tickets'].find({})")
      [ticket for ticket in tickets]
+with st.expander('Biglietti emessi, GROUP BY PER IL NOMINATIVO'):
+     st.code('''    {"$unwind": "$tickets"},
+             # 'unwind' spacchetta l'array dei tickets
+    
+    # Group by nominativo
+    {"$group": {
+        "_id": "$tickets.nominativo",
+        "tickets": {"$push": {
+            "event_name": "$event_name",
+            "event_id": "$event_id",
+            "ticket_id": "$tickets.ticket_id"
+        }}
+    }},      # grouppa per il nominativo
+    
+    # Sort by nominativo (optional)
+    {"$sort": {"_id": 1}}
+             # sorta per id''')
+     pipeline_tickets_nominativo = [
+    # Unwind the tickets array
+    {"$unwind": "$tickets"},
+
+    # Group by nominativo
+    {"$group": {
+        "_id": "$tickets.nominativo",
+        "tickets": {"$push": {
+            "event_name": "$event_name",
+            "event_id": "$event_id",
+            "ticket_id": "$tickets.ticket_id"
+        }}
+    }},
+    
+    # Sort by nominativo (optional)
+    {"$sort": {"_id": 1}}
+    ]
+     pipeline_tickets_result = st.session_state['tickets'].aggregate(pipeline_tickets_nominativo)
+     [ticket for ticket in pipeline_tickets_result]
 

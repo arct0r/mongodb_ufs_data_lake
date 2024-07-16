@@ -5,9 +5,15 @@ import time
 import random
 import uuid
 import streamlit as st
-
 import datetime
 from bson import ObjectId
+
+import requests
+import io
+from PIL import Image
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
 
 def mongoConnect ():
     connection_url = st.secrets["DB_URL"]
@@ -132,4 +138,37 @@ def load_ticket(event, nominativo):
         print("Non ci sono piu' biglietti disponibili!")
         return None
 
+
+def get_and_resize_artist_image(artist_name, size=(150, 150)):
+    # Spotify client, credenziali
+    client_credentials_manager = SpotifyClientCredentials(
+        client_id=st.session_state['spoti_client'],
+        client_secret=st.session_state['spoti_client_secret']
+    ) # Spotify client, lo inizializzo
+    sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
+    # Cerco l'artista
+    results = sp.search(q='artist:' + artist_name, type='artist')
+    artists = results['artists']['items']
     
+    if not artists:
+        return None
+
+    # Piglio il primo artista
+    artist = artists[0]
+    if not artist['images']: 
+        return None
+
+    image_url = artist['images'][0]['url']
+    # Pheega che comodo 
+
+    # Scarico l'immagine
+    response = requests.get(image_url)
+    if response.status_code != 200:
+        return None, "Failed to download image"
+
+    # Apro l'immagin e faccio un resize
+    image = Image.open(io.BytesIO(response.content))
+    resized_image = image.resize(size)
+
+    return resized_image
