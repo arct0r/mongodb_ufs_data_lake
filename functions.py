@@ -6,7 +6,6 @@ import random
 import uuid
 import streamlit as st
 import datetime
-from bson import ObjectId
 
 import requests
 import io
@@ -142,8 +141,8 @@ def load_ticket(event, nominativo):
 def get_and_resize_artist_image(artist_name, size=(150, 150)):
     # Spotify client, credenziali
     client_credentials_manager = SpotifyClientCredentials(
-        client_id=st.session_state['spoti_client'],
-        client_secret=st.session_state['spoti_client_secret']
+        client_id=st.secrets['spoti_client'],
+        client_secret=st.secrets['spoti_client_secret']
     ) # Spotify client, lo inizializzo
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
