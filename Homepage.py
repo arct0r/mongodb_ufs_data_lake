@@ -49,7 +49,6 @@ if 'artisti_pictures' not in st.session_state:
         st.session_state.artisti_pictures = {a['artist'].strip():get_and_resize_artist_image(a['artist'].strip()) for a in artisti}
     except:
         print("Non sono riuscito a caricare le immagini degli artisti")
-st.session_state.artisti_pictures
 
 # Carico gli eventi da mostrare nella homepage in base al toggle past_events
 if past_events:
