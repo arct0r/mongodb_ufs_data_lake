@@ -132,7 +132,7 @@ def print_event(event:dict):
                 try:
                     st.image(image=st.session_state.artisti_pictures[event['artist'][0]])
                 except:
-                    print(f"Non ho trovato l'immagine per {event['artist']}")
+                    print(f"Non ho trovato l'immagine per {event['artist'][0]}")
             f"📅 :blue[*Data:*] {event['date'].strftime('**%d/%m**, %H:%M')}, :orange[***| {', '.join(event['tags'])}***]"
             f"👨‍🎨 :blue[*Artisti:*] {', '.join(event['artist'])}"
             f"🗺️ :blue[*Location:*] {event['location']}, {event['location_city']}"
@@ -164,3 +164,4 @@ for i in range(0,len(events),2):
                 print_event(events[i+1])
         except:
             pass
+
