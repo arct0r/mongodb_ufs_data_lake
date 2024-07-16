@@ -46,9 +46,10 @@ current_datetime = datetime.datetime.now()
 artisti = db['artists'].find({})
 if 'artisti_pictures' not in st.session_state:
     try:
-        st.session_state.artisti_pictures = {a['artist']:get_and_resize_artist_image(a['artist']) for a in artisti}
+        st.session_state.artisti_pictures = {a['artist'].strip():get_and_resize_artist_image(a['artist'].strip()) for a in artisti}
     except:
         print("Non sono riuscito a caricare le immagini degli artisti")
+st.session_state.artisti_pictures
 
 # Carico gli eventi da mostrare nella homepage in base al toggle past_events
 if past_events:
@@ -130,9 +131,9 @@ def print_event(event:dict):
             st.subheader(f":violet[**{event['event_name']}**]")
             if ('Concerto' or 'Spettacolo' or 'Musica' or 'Classica' or 'Jazz' or 'Rock' or 'Arte' or 'Musica') in event['tags']:
                 try:
-                    st.image(image=st.session_state.artisti_pictures[event['artist'][0]])
+                    st.image(image=st.session_state.artisti_pictures[event['artist'][0].strip()])
                 except:
-                    print(f"Non ho trovato l'immagine per {event['artist'][0]}")
+                    print(f"Non ho trovato l'immagine per '{event['artist'][0]}'")
             f"📅 :blue[*Data:*] {event['date'].strftime('**%d/%m**, %H:%M')}, :orange[***| {', '.join(event['tags'])}***]"
             f"👨‍🎨 :blue[*Artisti:*] {', '.join(event['artist'])}"
             f"🗺️ :blue[*Location:*] {event['location']}, {event['location_city']}"
@@ -165,3 +166,6 @@ for i in range(0,len(events),2):
         except:
             pass
 
+#artist_name = "George Benson"
+#result_image = get_and_resize_artist_image(artist_name)
+#st.image(result_image)

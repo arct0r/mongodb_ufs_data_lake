@@ -13,7 +13,6 @@ from PIL import Image
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-
 def mongoConnect ():
     connection_url = st.secrets["DB_URL"]
     client = MongoClient(connection_url)  
@@ -99,6 +98,7 @@ def load_ticket(event, nominativo):
     tickets_collection = st.session_state['tickets']
 
     # Cerco di ridurre 'freeSlots' nella collection degli eventi
+    print(f'Cerco di ridurre lo slot per {event['_id']}')
     updated_event = events_collection.find_one_and_update(
         {
             '_id': event['_id'],
@@ -148,9 +148,9 @@ def get_and_resize_artist_image(artist_name, size=(150, 150)):
 
     # Cerco l'artista
     print(f'Cerco {artist_name}')
-    results = sp.search(q='artist:' + artist_name.lstrip().rstrip(), type='artist')
+    results = sp.search(q='artist:' + artist_name, type='artist')
     artists = results['artists']['items']
-    
+    #print(artists[0]['images'])
     if not artists:
         return None
 
@@ -165,7 +165,7 @@ def get_and_resize_artist_image(artist_name, size=(150, 150)):
     # Scarico l'immagine
     response = requests.get(image_url)
     if response.status_code != 200:
-        return None, "Failed to download image"
+        return None 
 
     # Apro l'immagin e faccio un resize
     image = Image.open(io.BytesIO(response.content))

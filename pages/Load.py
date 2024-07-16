@@ -63,8 +63,8 @@ def add_event (event_name, artist, location, price, slots, date, description, ta
                                                 'location_street':full_locations_processed[location]['street'],
                                                 'location_country':full_locations_processed[location]['country'],
                                                 'price':price,
-                                                'slots':slots,
-                                                'freeSlots':slots,
+                                                'slots':int(slots),
+                                                'freeSlots':int(slots),
                                                 'date':date,
                                                 'description':description,
                                                 'tags':tags})
