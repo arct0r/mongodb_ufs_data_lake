@@ -98,7 +98,7 @@ def load_ticket(event, nominativo):
     tickets_collection = st.session_state['tickets']
 
     # Cerco di ridurre 'freeSlots' nella collection degli eventi
-    print(f'Cerco di ridurre lo slot per {event['_id']}')
+    print(f"Cerco di ridurre lo slot per {event['_id']}")
     updated_event = events_collection.find_one_and_update(
         {
             '_id': event['_id'],
