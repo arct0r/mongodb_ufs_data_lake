@@ -128,7 +128,7 @@ columns = [c1,c2]
 def print_event(event:dict):
             
             st.subheader(f":violet[**{event['event_name']}**]")
-            if ('Concerto' or 'Spettacolo' or 'Musica' or 'Classica' or 'Jazz' or 'Rock') in event['tags']:
+            if ('Concerto' or 'Spettacolo' or 'Musica' or 'Classica' or 'Jazz' or 'Rock' or 'Arte' or 'Musica') in event['tags']:
                 try:
                     st.image(image=st.session_state.artisti_pictures[event['artist'][0]])
                 except:
@@ -164,5 +164,3 @@ for i in range(0,len(events),2):
                 print_event(events[i+1])
         except:
             pass
-
-

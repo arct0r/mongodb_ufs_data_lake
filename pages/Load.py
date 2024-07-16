@@ -30,7 +30,7 @@ tags_opt = [
     '18+',
     'Letteratura',
     'Natura',
-    'Arte'
+    'Arte',
     'Musica',
     'Spettacolo',
     'Classica',

@@ -147,7 +147,7 @@ def get_and_resize_artist_image(artist_name, size=(150, 150)):
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     # Cerco l'artista
-    results = sp.search(q='artist:' + artist_name, type='artist')
+    results = sp.search(q='artist:' + artist_name.strip(), type='artist')
     artists = results['artists']['items']
     
     if not artists:
