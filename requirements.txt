@@ -3,3 +3,5 @@ dnspython
 pymongo
 geopy
 uuid
+spotipy
+PIL
