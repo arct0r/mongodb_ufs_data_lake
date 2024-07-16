@@ -52,7 +52,6 @@ with st.expander('Locations, Artists'):
         full_locations_processed
 
 
-#full_locations_processed['Kebab Anatolia ']['location']
 def add_event (event_name, artist, location, price, slots, date, description, tags):
     try:
         st.session_state['events'].insert_one({'event_name':event_name,

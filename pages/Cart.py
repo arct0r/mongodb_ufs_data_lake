@@ -58,10 +58,10 @@ with st.expander('Biglietti emessi'):
      [ticket for ticket in tickets]
 with st.expander('Biglietti emessi, GROUP BY PER IL NOMINATIVO'):
      st.code('''pipeline_tickets_nominativo = [
-    # Unwind the tickets array
+    # Spacchetto la collection dei tickets
     {"$unwind": "$tickets"},
 
-    # Group by nominativo
+    # Group By per il nominativo
     {"$group": {
         "_id": "$tickets.nominativo",
         "tickets": {"$push": {
@@ -69,10 +69,7 @@ with st.expander('Biglietti emessi, GROUP BY PER IL NOMINATIVO'):
             "event_id": "$event_id",
             "ticket_id": "$tickets.ticket_id"
         }}
-    }},
-    
-    # Sort by nominativo (optional)
-    {"$sort": {"_id": 1}}
+    }}
     ]
      pipeline_tickets_result = st.session_state['tickets'].aggregate(pipeline_tickets_nominativo)''')
      pipeline_tickets_nominativo = [
