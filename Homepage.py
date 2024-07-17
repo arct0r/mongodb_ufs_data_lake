@@ -121,6 +121,12 @@ with st.expander('Search Filters'):
                 filters['distanza'] = distanza_filtro_km
             if not distanza_filtro:
                 filters['distanza'] = 1
+            query = str(filter_query(filters))
+            # Per mostrare la query che sto eseguendo
+            filtered_events = filter_events(db['events'], filters)
+            events = [event for event in filtered_events]
+            st.code('db.events.find('+query+')')
+
     # Mostro i filtri
     with col2:
         filters
