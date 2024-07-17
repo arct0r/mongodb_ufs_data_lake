@@ -10,7 +10,7 @@ import time
 import random
 import uuid
 from pages.Load import tags_opt
-from functions import filter_query, get_and_resize_artist_image
+from functions import filter_query, get_and_resize_artist_image, get_user_location
 
 st.set_page_config(
     page_title="Homepage",
@@ -20,7 +20,7 @@ st.set_page_config(
 
 st.title('🐥 TicketQuack')
 'In this page you will be able to see the upcoming events and buy tickets for them. '
-past_events = st.toggle('Show Past Events')
+past_events = st.toggle('Show Past Events 📅')
 
 
 # Mi collego al client
@@ -38,6 +38,8 @@ st.session_state['tickets'] = db['tickets']
 # Questi index mi servono per usare le geoqueries
 db['locations'].create_index([("location", "2dsphere")])
 db['events'].create_index([("location_coordinates", "2dsphere")])
+
+
 
 # La current date mi serve per qualcosa dopo
 current_datetime = datetime.datetime.now()
@@ -81,8 +83,9 @@ with st.expander('Search Filters'):
         luogo_filtro = st.text_input("Luogo")
         distanza_filtro = st.text_input(label='Distanza dal luogo in km', value=None)
     with col1: 
-        add = st.button('Conferma')
-        reset = st.button('Resetta i filtri')
+        add = st.button('✅ Conferma')
+        reset = st.button('🔄 Resetta i filtri')
+        posizione = st.button('📍 Posizione ')
     with col3:
         tags = st.selectbox(label='Tags', options=tags_opt, index=None)
 
@@ -110,7 +113,14 @@ with st.expander('Search Filters'):
         filtered_events = filter_events(db['events'], filters)
         events = [event for event in filtered_events]
         st.code('db.events.find('+query+')')
-
+    if posizione:
+            user_location = get_user_location()
+            filters['coordinate'] = (user_location[1], user_location[0])
+            if distanza_filtro:
+                distanza_filtro_km = int(distanza_filtro.strip())
+                filters['distanza'] = distanza_filtro_km
+            if not distanza_filtro:
+                filters['distanza'] = 1
     # Mostro i filtri
     with col2:
         filters

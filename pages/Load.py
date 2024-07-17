@@ -7,6 +7,7 @@ from functions import get_coordinates, mongoConnect
 
 st.set_page_config(
     page_title="Load",
+    page_icon='🗃️'
 )
 
 # Bugfixing
@@ -47,10 +48,6 @@ full_locations_processed = {}
 for loc in full_locations:
     full_locations_processed[loc['name']] = loc
 
-with st.expander('Locations, Artists'):
-        artists
-        full_locations_processed
-
 
 def add_event (event_name, artist, location, price, slots, date, description, tags):
     try:
@@ -72,8 +69,8 @@ def add_event (event_name, artist, location, price, slots, date, description, ta
         st.error('Could not add the event')
 
 
-st.title('Add new stuff to the database')
-tab1, tab2, tab3 = st.tabs(["Event", "Artist", "Location"])
+st.title('🗃️ Add new stuff to the database')
+tab1, tab2, tab3 = st.tabs(["🕺 Event", "👨‍🎨 Artist", "🌎 Location"])
 
 with tab1:
     st.subheader('Add Event')

@@ -4,11 +4,11 @@ from functions import load_ticket, mongoConnect
 
 st.set_page_config(
     page_title="Cart",
-    page_icon="👋",
+    page_icon="🛒",
 )
 
 
-st.title('Cart')
+st.title('🛒 Cart')
 # Bugfixing
 if ('db' or 'artists' or 'events' or 'locations' or 'tickets') not in st.session_state:
     # Mi collego al client
@@ -33,10 +33,10 @@ st.subheader(f"Totale: {sum(int(event['price']) for event in st.session_state['c
 col1,col2, col3 = st.columns([2,2,6])
 
 with col1:
-    clear_cart = st.button('Clear Cart')
+    clear_cart = st.button('🗑️ Clear Cart')
 with col2:
-    checkout = st.button('Checkout')
-nominativo = st.text_input('Inserisci un nominativo per i biglietti')
+    checkout = st.button('🤑 Checkout')
+nominativo = st.text_input('🙋🏻‍♂️ Inserisci un nominativo per i biglietti')
 
 if clear_cart:
     st.session_state['cart'] = []
@@ -51,12 +51,12 @@ if checkout and len(st.session_state['cart'])!=0 and nominativo.strip():
                     st.session_state['cart'] = []
                     st.balloons()
 
-with st.expander('Biglietti emessi'):
+with st.expander('🎟️ Biglietti emessi'):
      tickets = st.session_state['tickets'].find({})
      'Comando per ottenere tutti i ticket:'
      st.code("st.session_state['tickets'].find({})")
      [ticket for ticket in tickets]
-with st.expander('Biglietti emessi, GROUP BY PER IL NOMINATIVO'):
+with st.expander('🎟️ Biglietti emessi, GROUP BY PER IL NOMINATIVO'):
      st.code('''pipeline_tickets_nominativo = [
     # Spacchetto la collection dei tickets
     {"$unwind": "$tickets"},

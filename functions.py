@@ -172,3 +172,15 @@ def get_and_resize_artist_image(artist_name, size=(150, 150)):
     resized_image = image.resize(size)
 
     return resized_image
+
+# metodo semplicissimo per ottenere la location dell'user in base all'IP
+def get_user_location():
+    response = requests.get('https://ipapi.co/json/')
+    if response.status_code == 200:
+        data = response.json()
+        return [data.get('latitude'), data.get('longitude')]
+    return None
+
+
+user_location = get_user_location()
+print(user_location)
