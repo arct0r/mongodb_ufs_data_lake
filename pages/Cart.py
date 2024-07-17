@@ -29,6 +29,7 @@ for event in st.session_state['cart']:
     st.code(f'''{event['evento']}, {event['artist'][0]}, {event['price']} $''')
 
 st.subheader(f"Totale: {sum(int(event['price']) for event in st.session_state['cart'])} $")
+nominativo = st.text_input('🙋🏻‍♂️ Inserisci un nominativo per i biglietti')
 
 col1,col2, col3 = st.columns([2,2,6])
 
@@ -36,7 +37,6 @@ with col1:
     clear_cart = st.button('🗑️ Clear Cart')
 with col2:
     checkout = st.button('🤑 Checkout')
-nominativo = st.text_input('🙋🏻‍♂️ Inserisci un nominativo per i biglietti')
 
 if clear_cart:
     st.session_state['cart'] = []
