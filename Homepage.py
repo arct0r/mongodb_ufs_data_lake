@@ -1,7 +1,7 @@
 import streamlit as st
 from functions import mongoConnect
 from pymongo import MongoClient, GEOSPHERE, ASCENDING
-from functions import get_coordinates, reverseCoord
+from functions import get_coordinates
 import datetime
 from functions import filter_events
 from geopy.geocoders import Nominatim
