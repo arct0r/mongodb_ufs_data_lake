@@ -44,11 +44,11 @@ current_datetime = datetime.datetime.now()
 
 # Mi serve la lista degli artisti per poterla usare nei filtri 
 artisti = db['artists'].find({})
-if 'artisti_pictures' not in st.session_state:
-    try:
-        st.session_state.artisti_pictures = {a['artist'].strip():get_and_resize_artist_image(a['artist'].strip()) for a in artisti}
-    except:
-        print("Non sono riuscito a caricare le immagini degli artisti")
+#if 'artisti_pictures' not in st.session_state:
+#    try:
+#        st.session_state.artisti_pictures = {a['artist'].strip():get_and_resize_artist_image(a['artist'].strip()) for a in artisti}
+#    except:
+#        print("Non sono riuscito a caricare le immagini degli artisti")
 
 # Carico gli eventi da mostrare nella homepage in base al toggle past_events
 if past_events:
@@ -130,7 +130,17 @@ def print_event(event:dict):
             st.subheader(f":violet[**{event['event_name']}**]")
             if ('Concerto' or 'Spettacolo' or 'Musica' or 'Classica' or 'Jazz' or 'Rock' or 'Arte' or 'Musica') in event['tags']:
                 try:
-                    st.image(image=st.session_state.artisti_pictures[event['artist'][0].strip()])
+                    artista_main = event['artist'][0].strip()
+                    if not 'artists_covers' in st.session_state:
+                        st.session_state['artists_covers'] = {} 
+                        st.session_state['artists_covers'][artista_main] = get_and_resize_artist_image(artista_main)
+                        st.image(image=st.session_state['artists_covers'][artista_main])
+                    elif 'artists_covers' in st.session_state:
+                        if artista_main in st.session_state['artists_covers']:
+                            st.image(image=st.session_state['artists_covers'][artista_main])
+                        elif artista_main not in st.session_state['artists_covers']:
+                            st.session_state['artists_covers'][artista_main] = get_and_resize_artist_image(artista_main)
+                            st.image(image=st.session_state['artists_covers'][artista_main])
                 except:
                     print(f"Non ho trovato l'immagine per '{event['artist'][0]}'")
             f"📅 :blue[*Data:*] {event['date'].strftime('**%d/%m**, %H:%M')}, :orange[***| {', '.join(event['tags'])}***]"
