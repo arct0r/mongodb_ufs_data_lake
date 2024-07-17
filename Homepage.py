@@ -160,7 +160,7 @@ def print_event(event:dict):
                 except:
                     print(f"Non ho trovato l'immagine per '{event['artist'][0]}'")
             f"📅 :blue[*Data:*] {event['date'].strftime('**%d/%m**, %H:%M')}, :orange[***| {', '.join(event['tags'])}***]"
-            f"👨‍🎨 :blue[*Artisti:*] **{', '.join(event['artist'])}**"
+            f"👨‍🎨 :blue[*Artisti:*] {', '.join(event['artist'])}"
             f"🗺️ :blue[*Location:*] {event['location']}, {event['location_city']}"
             f"🎟️ :blue[*Posti disponibili:*] {event['freeSlots']}"
             f"🤑 :blue[*Prezzo:*] {event['price']} 🍌"
