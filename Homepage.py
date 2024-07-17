@@ -121,6 +121,14 @@ with st.expander('Search Filters'):
                 filters['distanza'] = distanza_filtro_km
             if not distanza_filtro:
                 filters['distanza'] = 1
+            if artista_filtro:
+                filters['artisti'] = artista_filtro
+            if nome_evento_filtro:
+                filters['nome_evento'] = nome_evento_filtro
+            if data_start and data_end:
+                filters['date'] = {'start' : data_start, 'end' : data_end}
+            if tags:
+                filters['tags'] = tags
             query = str(filter_query(filters))
             # Per mostrare la query che sto eseguendo
             filtered_events = filter_events(db['events'], filters)
