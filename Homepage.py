@@ -179,7 +179,7 @@ def print_event(event:dict):
                     if int(event['freeSlots'])>0 and event['date'] > current_datetime:
                         try:
                             st.session_state['cart'].append({'evento':event['event_name'], 'price':event['price'], 'artist':event['artist'], '_id':event['_id']})
-                            st.toast(f"Ho aggiunto {event['event_name']} al carrello")
+                            st.toast(f"Ho aggiunto {event['event_name']} al carrello 😊")
                         except: 
                             st.session_state['cart'] = []
                     else:
