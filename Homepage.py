@@ -18,7 +18,7 @@ st.set_page_config(
     layout='wide'
 )
 
-st.title('🐥 TicketQuack')
+st.title('🐥 Ticket:orange[***quack***]')
 'In this page you will be able to see the upcoming events and buy tickets for them. '
 past_events = st.toggle('Show Past Events 📅')
 
